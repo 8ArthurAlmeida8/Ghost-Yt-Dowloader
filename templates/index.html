@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ghost Yt Downloader — baixe vídeos e áudios do YouTube com a melhor qualidade disponível.">
+    <title>Ghost Yt Downloader</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+
+        <div class="card">
+
+            <!-- Shutdown button -->
+            <button id="shutdownBtn" class="shutdown-btn" title="Encerrar servidor">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/>
+                </svg>
+                Encerrar
+            </button>
+
+            <!-- Header -->
+            <div class="header">
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="GYD" class="logo-icon">
+                </div>
+                <h1>Ghost Yt Downloader</h1>
+                <p>Baixe vídeos e áudios do YouTube em altíssima resolução, de forma rápida e silenciosa.</p>
+            </div>
+
+            <!-- Search Form -->
+            <form id="urlForm">
+                <div class="input-group">
+                    <input type="url" id="urlInput" placeholder="Cole o link do vídeo ou playlist..." required autocomplete="off">
+                </div>
+                <button type="submit" id="searchBtn">
+                    <span>Buscar Mídia</span>
+                    <div class="loader"></div>
+                </button>
+            </form>
+
+            <!-- Error -->
+            <div id="errorMsg" class="error-message"></div>
+
+            <!-- Selection area -->
+            <div id="selectionArea" class="selection-area">
+                <div class="media-info">
+                    <h3 id="mediaTitle">Título</h3>
+                    <p id="mediaType">Tipo: ...</p>
+                </div>
+
+                <div class="format-selection">
+                    <label>Formato</label>
+                    <div class="radio-group">
+                        <label class="radio-container">
+                            <input type="radio" name="formatOption" value="mp3" checked>
+                            <span class="radio-checkmark"></span>
+                            Áudio (MP3)
+                        </label>
+                        <label class="radio-container">
+                            <input type="radio" name="formatOption" value="mp4">
+                            <span class="radio-checkmark"></span>
+                            Vídeo (MP4, até 4K)
+                        </label>
+                    </div>
+                </div>
+
+                <div id="playlistContainer" class="playlist-container">
+                    <div class="playlist-header">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="selectAll" checked>
+                            <span class="checkmark"></span>
+                            Selecionar Todos
+                        </label>
+                        <span id="selectedCount">0 selecionados</span>
+                    </div>
+                    <div id="playlistItems" class="playlist-items"></div>
+                </div>
+
+                <button id="downloadBtn" class="download-action-btn">
+                    <span>Iniciar Download</span>
+                    <div class="loader"></div>
+                </button>
+            </div>
+
+            <!-- Status Area -->
+            <div id="statusArea" class="status-area">
+                <div id="statusText" class="status-text">Iniciando...</div>
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <a id="downloadLink" class="download-link" href="#" download>Baixar Arquivo</a>
+            </div>
+
+            <!-- Histórico -->
+            <div id="historicoArea" class="historico-area">
+                <div class="historico-header">
+                    <div class="historico-title-row">
+                        <span class="historico-icon">🕘</span>
+                        <h2>Histórico</h2>
+                    </div>
+                    <button id="clearHistoricoBtn" class="clear-btn">🗑️ Limpar</button>
+                </div>
+                <div id="historicoList" class="historico-list"></div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer-note">
+                <p class="ffmpeg-warning">⚠️ Requer <a href="https://ffmpeg.org/download.html" target="_blank">FFmpeg</a> para MP3 e vídeos em 4K.</p>
+
+                <div class="credits">
+                    <a href="https://github.com/8ArthurAlmeida8" target="_blank" class="github-btn">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                        8ArthurAlmeida8
+                    </a>
+                </div>
+            </div>
+
+        </div><!-- /card -->
+
+        <!-- Modal de Confirmação -->
+        <div id="customConfirmModal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <h3 id="confirmTitle" class="modal-title">Confirmação</h3>
+                <p id="confirmMessage" class="confirm-message">Você tem certeza?</p>
+                <div class="modal-actions confirm-buttons">
+                    <button id="confirmCancelBtn" class="modal-btn outline">Cancelar</button>
+                    <button id="confirmOkBtn" class="modal-btn primary">Confirmar</button>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /container -->
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
