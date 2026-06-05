@@ -1,0 +1,62 @@
+======================================================
+     GUIA DE INSTALAÇÃO E CONFIGURAÇÃO DO GYD
+        (Ghost YT Downloader - Open Source)
+======================================================
+
+Para instalar o GYD em um PC novo e deixá-lo pronto para uso com 1 clique (e invisível em segundo plano), siga exatamente este passo a passo:
+
+
+--- PASSO 1: INSTALAR O PYTHON ---
+1. Acesse o site oficial: https://www.python.org/downloads/
+2. Clique no botão amarelo "Download Python".
+3. Abra o instalador que foi baixado.
+4. IMPORTANTE: Na primeira tela do instalador, marque a caixinha lá embaixo escrita "Add python.exe to PATH" (Isso é obrigatório!).
+5. Clique em "Install Now" e aguarde concluir.
+
+
+--- PASSO 2: INSTALAR O FFMPEG (Para unir vídeo e áudio em 4K) ---
+1. Baixe o FFmpeg (ferramenta de vídeo) no site oficial (https://ffmpeg.org/download.html).
+2. Extraia a pasta baixada.
+3. Coloque a pasta extraída no disco C: (Ex: C:\ffmpeg).
+4. Adicione a pasta "bin" do FFmpeg nas "Variáveis de Ambiente" do Windows:
+   - Abra o menu Iniciar e digite "Variáveis de ambiente" e dê Enter.
+   - Clique no botão "Variáveis de Ambiente...".
+   - Na parte inferior (Variáveis do sistema), dê dois cliques em "Path".
+   - Clique em "Novo" e adicione o caminho do ffmpeg (Ex: C:\ffmpeg\bin).
+   - Dê OK em tudo.
+
+
+--- PASSO 3: INSTALAR AS DEPENDÊNCIAS DO GYD ---
+1. Abra a pasta do projeto (a pasta que contém o arquivo app.pyw e este texto).
+2. Clique com o botão direito em um espaço vazio da pasta e selecione "Abrir no Terminal" (ou abra o CMD e navegue até a pasta usando o comando 'cd').
+3. Digite o seguinte comando e aperte Enter:
+   pip install -r requirements.txt
+4. Aguarde a barrinha carregar e instalar todas as bibliotecas (yt-dlp, Flask, etc).
+
+
+--- PASSO 4: CONFIGURAR OS COOKIES (Evitar bloqueio de Bot do YouTube) ---
+Se o YouTube der erro de "Sign in to confirm you're not a bot", você precisa dos cookies.
+1. Abra o navegador Google Chrome (ou Edge).
+2. Faça login na sua conta do YouTube normalmente.
+3. Instale a extensão "Get cookies.txt LOCALLY" na loja do Chrome:
+   Link: https://chrome.google.com/webstore/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc
+4. Estando na aba do YouTube logado, clique no ícone da extensão.
+5. Clique em "Export" para baixar o arquivo.
+6. Mova o arquivo baixado para DENTRO DA PASTA DO GYD.
+7. Certifique-se de que o nome dele seja EXATAMENTE: cookies.txt
+   (Cuidado para o Windows não renomear para cookies.txt.txt sem você ver).
+
+
+--- PASSO 5: EXECUTAR O SISTEMA ---
+Tudo pronto! 
+O sistema não usa tela preta (terminal) irritante. 
+
+1. Basta dar dois cliques no arquivo "app.pyw". 
+2. Ele vai abrir o seu navegador silenciosamente na página do GYD após 1 segundo.
+3. Se você fechar o navegador sem querer, basta acessar: http://localhost:5000
+4. Quando quiser desligar o servidor para valer, clique no botão vermelho "🛑 Finalizar Servidor" no canto superior direito da página do GYD!
+
+DICA PARA ÁREA DE TRABALHO:
+- Clique com o botão direito no "app.pyw", vá em "Enviar para" -> "Área de trabalho (criar atalho)".
+- Na área de trabalho, clique com o botão direito no atalho criado -> Propriedades -> "Alterar ícone..."
+- Selecione o arquivo "download-removebg-preview.png" (ou converta para .ico) que está dentro da pasta do projeto para deixar o Gato como ícone principal!

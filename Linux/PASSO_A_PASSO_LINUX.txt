@@ -1,0 +1,40 @@
+======================================================
+     GUIA DE INSTALAÇÃO E EXECUÇÃO DO GYD (LINUX)
+        (Ghost YT Downloader - Versão Otimizada)
+======================================================
+
+A versão Linux foi construída para utilizar os recursos
+nativos do seu sistema, sendo muito mais leve e rápida.
+
+Neste pacote, removemos os executáveis do Windows (.exe)
+e adicionamos um script de inicialização inteligente.
+
+======================================================
+COMO RODAR O APLICATIVO
+======================================================
+
+1. Abra o Terminal do seu Linux.
+2. Navegue até a pasta do GYD:
+   cd "caminho/para/pasta/GYD (Linux)"
+   
+3. Dê permissão de execução ao script:
+   chmod +x start.sh
+
+4. Rode o script:
+   ./start.sh
+
+======================================================
+O QUE O SCRIPT FAZ POR VOCÊ?
+======================================================
+
+O `start.sh` é muito inteligente. Ele fará todo o
+trabalho chato automaticamente:
+- Ele verifica se você tem o FFmpeg (para converter áudio e mesclar 4K). Se não tiver, ele pede sua senha root e instala pra você via `apt`.
+- Ele verifica se tem o Python e as bibliotecas virtuais (venv).
+- Ele cria a "bolha" segura (venv), instala os pacotes do projeto e liga o servidor sem poluir seu computador.
+
+Após rodar o `./start.sh`, seu navegador abrirá 
+sozinho na página http://127.0.0.1:5000.
+
+Para fechar o servidor, você pode usar o botão
+vermelho dentro do próprio app Web.

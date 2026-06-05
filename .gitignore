@@ -1,0 +1,9 @@
+*.rar
+downloads/
+.historico/
+__pycache__/
+ffmpeg/
+*.mp3
+*.mp4
+*.zip
+venv/
