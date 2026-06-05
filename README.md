@@ -49,7 +49,7 @@
 </table>
 
 ### 🔒 Segurança Integrada
-Para garantir que seu servidor local seja seguro, o botão de encerrar o servidor agora conta com um bloqueio por senha administrativa (senha padrão: `MultiM1d1a`).
+Para garantir que seu servidor local seja seguro, o botão de encerrar o servidor agora conta com um bloqueio por senha administrativa (senha padrão: `0000`).
 
 ---
 
