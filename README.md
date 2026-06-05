@@ -58,9 +58,7 @@ Para garantir que seu servidor local seja seguro, o botão de encerrar o servido
 Este projeto foi pensado para ser acessível e de uso pessoal.
 
 ### 📥 1. Baixando o Programa
-1. Vá na aba **[Releases](../../releases)** deste repositório.
-2. Baixe o arquivo **`GYD.rar`** que está lá disponível.
-3. Extraia a pasta onde você preferir no seu computador.
+1. Baixe a pasta da versão que você quer 
 
 ### ⚙️ 2. Dependências
 Leia o arquivo **`PASSO_A_PASSO.txt`** (que está dentro do seu `.rar`) para instruções completas. Em resumo, você vai precisar de:
