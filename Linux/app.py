@@ -130,7 +130,7 @@ def parse_time(time_str):
         return None
     return None
 
-def download_media_task(url, task_id, selected_indices=None, format_type='mp3', quality=None, start_time=None, end_time=None):
+def download_media_task(url, task_id, selected_indices=None, format_type='mp3', quality=None, start_time=None, end_time=None, **kwargs):
     task_dir = os.path.join(DOWNLOAD_DIR, task_id)
     os.makedirs(task_dir, exist_ok=True)
     
@@ -145,6 +145,11 @@ def download_media_task(url, task_id, selected_indices=None, format_type='mp3', 
         'http_chunk_size': 10485760
     }
     
+    flash_mode = kwargs.get('flash_mode', False)
+    if flash_mode:
+        ydl_opts['concurrent_fragment_downloads'] = 30
+        ydl_opts['http_chunk_size'] = 104857600
+        
     cookies_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cookies.txt')
     if os.path.exists(cookies_path):
         ydl_opts['cookiefile'] = cookies_path
@@ -339,6 +344,7 @@ def start_download():
     quality = data.get('quality')
     start_time = data.get('start_time')
     end_time = data.get('end_time')
+    flash_mode = data.get('flash_mode', False)
     
     if not url:
         return jsonify({'error': 'URL is required'}), 400
@@ -346,7 +352,7 @@ def start_download():
     task_id = str(uuid.uuid4())
     download_progress[task_id] = {'status': 'Iniciando...', 'percent': '0%'}
     
-    thread = threading.Thread(target=download_media_task, args=(url, task_id, selected_indices, format_type, quality, start_time, end_time))
+    thread = threading.Thread(target=download_media_task, args=(url, task_id, selected_indices, format_type, quality, start_time, end_time), kwargs={'flash_mode': flash_mode})
     thread.start()
     
     return jsonify({'task_id': task_id})
@@ -398,12 +404,46 @@ def clear_historico():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/check_ip', methods=['GET'])
+def check_ip():
+    ydl_opts = {
+        'extract_flat': True,
+        'quiet': True
+    }
+    cookies_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cookies.txt')
+    if os.path.exists(cookies_path):
+        ydl_opts['cookiefile'] = cookies_path
+        
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.extract_info('https://www.youtube.com/watch?v=dQw4w9WgXcQ', download=False)
+        return jsonify({'status': 'ok', 'message': 'Seu IP esta limpo! O YouTube esta aceitando conexoes normais da sua rede.'})
+    except yt_dlp.utils.DownloadError as e:
+        error_msg = str(e).lower()
+        if '429' in error_msg or 'too many requests' in error_msg:
+            return jsonify({'status': 'blocked', 'message': 'IP NA LISTA CINZA (Erro 429). O YouTube esta bloqueando/limitando sua rede temporariamente por excesso de requisicoes.'})
+        elif 'sign in' in error_msg or 'bot' in error_msg or 'captcha' in error_msg:
+            return jsonify({'status': 'blocked', 'message': 'IP BLOQUEADO (Anti-Bot). O YouTube detectou trafego suspeito e esta exigindo CAPTCHA. Cuidado ao usar na igreja.'})
+        else:
+            return jsonify({'status': 'warning', 'message': f'Aviso: Erro ao testar, mas pode nao ser bloqueio de IP. Detalhe: {str(e)}'})
+    except Exception as e:
+         return jsonify({'status': 'error', 'message': f'Erro interno ao testar: {str(e)}'})
+
 @app.route('/api/shutdown', methods=['POST'])
 def shutdown():
-    data = request.json or {}
-    if data.get('senha') != '0000':
-        return jsonify({'error': 'Senha incorreta'}), 401
-    os._exit(0)
+    # Tenta desligar graciosamente o servidor web Flask (Werkzeug)
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func:
+        func()
+    
+    # Forca a finalizacao do processo raiz no SO (mata as threads pendentes)
+    def force_kill():
+        import time, signal
+        time.sleep(1) # Da tempo para a resposta de sucesso chegar no frontend
+        os.kill(os.getpid(), signal.SIGTERM)
+        
+    threading.Thread(target=force_kill).start()
+    return jsonify({'status': 'Server shutting down...'}), 200
 
 if __name__ == '__main__':
     try:

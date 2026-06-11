@@ -4,7 +4,7 @@
 
 # 👻 Ghost Yt Downloader
 
-**O aplicativo desktop mais rápido e invisível para download de mídias do YouTube.**
+**O aplicativo desktop mais rápido para download de mídias do YouTube.**
 
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-Web%20Interface-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
@@ -33,7 +33,7 @@
     </td>
     <td width="50%">
       <h3>🎬 Cinema em Casa (4K)</h3>
-      <p>Baixe vídeos inteiros em <b>MP4</b>. O sistema agora permite que você <b>escolha a resolução exata</b> que deseja baixar, de 144p até 4K!</p>
+      <p>Baixe vídeos inteiros em <b>MP4</b>. O sistema permite que você <b>escolha a resolução exata</b> que deseja baixar, de 144p até 4K!</p>
     </td>
   </tr>
   <tr>
@@ -43,13 +43,20 @@
     </td>
     <td width="50%">
       <h3>✂️ Recorte Cirúrgico (Minutagem)</h3>
-      <p>Quer só um pedaço do vídeo? Use a nova função de "Recortar Trecho". Digite o minuto inicial e final e o sistema baixa <b>apenas</b> aqueles segundos, economizando banda e tempo.</p>
+      <p>Quer só um pedaço do vídeo? Use a função de "Recortar Trecho". Digite o minuto inicial e final e o sistema baixa <b>apenas</b> aqueles segundos, economizando banda e tempo.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <h3>⚡ Modo Flash Turbo</h3>
+      <p>Se a velocidade é sua prioridade, ative o Modo Flash. O aplicativo usará 100% da capacidade da sua rede abrindo dezenas de conexões simultâneas para acelerar o download ao máximo!</p>
+    </td>
+    <td width="50%">
+      <h3>🧙‍♂️ Interface Wizard Step-by-Step</h3>
+      <p>Nova interface super fácil de usar, com um processo guiado passo a passo. Você escolhe o formato, a qualidade, faz os recortes e inicia o download tudo de forma limpa.</p>
     </td>
   </tr>
 </table>
-
-### 🔒 Segurança Integrada
-Para garantir que seu servidor local seja seguro, o botão de encerrar o servidor agora conta com um bloqueio por senha administrativa (senha padrão: `MultiM1d1a`).
 
 ---
 
@@ -58,12 +65,12 @@ Para garantir que seu servidor local seja seguro, o botão de encerrar o servido
 Este projeto foi pensado para ser acessível e de uso pessoal.
 
 ### 📥 1. Baixando o Programa
-1. Vá na aba **[Releases](../../releases)** deste repositório.
-2. Baixe o arquivo **`GYD.rar`** que está lá disponível.
-3. Extraia a pasta onde você preferir no seu computador.
+1. Vá até o topo desta página no GitHub.
+2. Clique no botão verde **Code** e depois em **Download ZIP**.
+3. Extraia a pasta onde você preferir no seu computador (Você verá as pastas `Windows` e `Linux`).
 
 ### ⚙️ 2. Dependências
-Leia o arquivo **`PASSO_A_PASSO.txt`** (que está dentro do seu `.rar`) para instruções completas. Em resumo, você vai precisar de:
+Leia o arquivo **`PASSO_A_PASSO.txt`** (dentro da pasta `Windows` ou `Linux`) para instruções completas. Em resumo, você vai precisar de:
 - **Python 3.8+** instalado (Não esqueça do "Add to PATH").
 - **FFmpeg** configurado no seu sistema (Ou já incluso na pasta).
 
@@ -75,16 +82,6 @@ pip install -r requirements.txt
 Pronto! Agora é só dar dois cliques em `app.pyw` e a interface abrirá na hora magicamente no seu navegador.
 
 *(Se você usa Linux, confira a versão `GYD (Linux)` no repositório com o script de auto-instalação!)*
-
----
-
-## 📸 Uma olhada no projeto
-
-<div align="center">
-  <i>(A interface Web local com o painel de download)</i><br><br>
-  <code>http://127.0.0.1:5000</code><br><br>
-  <img src="https://raw.githubusercontent.com/8ArthurAlmeida8/Ghost-Yt-Dowloader/main/assets/logo.png" alt="Icon" width="80" style="opacity: 0.5;">
-</div>
 
 ---
 

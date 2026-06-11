@@ -46,74 +46,104 @@
             <div id="errorMsg" class="error-message"></div>
 
             <!-- Selection area -->
+            
             <div id="selectionArea" class="selection-area">
                 <div class="media-info">
                     <h3 id="mediaTitle">Título</h3>
                     <p id="mediaType">Tipo: ...</p>
                 </div>
 
-                <div class="format-selection">
-                    <label>Formato</label>
-                    <div class="radio-group">
-                        <label class="radio-container">
-                            <input type="radio" name="formatOption" value="mp3" checked>
-                            <span class="radio-checkmark"></span>
-                            Áudio (MP3)
-                        </label>
-                        <label class="radio-container">
-                            <input type="radio" name="formatOption" value="mp4">
-                            <span class="radio-checkmark"></span>
-                            Vídeo (MP4, até 4K)
-                        </label>
+                <div id="wizardContainer" class="wizard-container">
+                    <!-- Step 1: Format -->
+                    <div id="step1" class="wizard-step active">
+                        <h4>Passo 1: Selecione o Formato</h4>
+                        <div class="radio-group" style="margin-top: 15px;">
+                            <label class="radio-container">
+                                <input type="radio" name="formatOption" value="mp3" checked>
+                                <span class="radio-checkmark"></span>
+                                Áudio (MP3)
+                            </label>
+                            <label class="radio-container">
+                                <input type="radio" name="formatOption" value="mp4">
+                                <span class="radio-checkmark"></span>
+                                Vídeo (MP4)
+                            </label>
+                        </div>
+                        <button type="button" class="wizard-next-btn" onclick="nextStep(2)">Próximo ➡️</button>
                     </div>
 
-                    <div id="qualitySelection" class="quality-selection" style="margin-top: 15px; display: none;">
-                        <label style="font-size: 0.9em; margin-bottom: 5px;">Qualidade de Áudio:</label>
-                        <select id="audioQualitySelect" class="quality-dropdown">
-                            <option value="320">320 kbps (Máxima)</option>
-                            <option value="256">256 kbps</option>
-                            <option value="192" selected>192 kbps (Padrão)</option>
-                            <option value="128">128 kbps</option>
-                            <option value="96">96 kbps</option>
-                            <option value="64">64 kbps (Baixa)</option>
-                        </select>
+                    <!-- Step 2: Quality -->
+                    <div id="step2" class="wizard-step" style="display: none;">
+                        <h4>Passo 2: Qualidade</h4>
+                        <div id="qualitySelection" class="quality-selection" style="margin-top: 15px;">
+                            <select id="audioQualitySelect" class="quality-dropdown">
+                                <option value="320">320 kbps (Máxima)</option>
+                                <option value="256">256 kbps (Alta)</option>
+                                <option value="192" selected>192 kbps (Padrão)</option>
+                                <option value="128">128 kbps (Econômica)</option>
+                                <option value="64">64 kbps (Muito Baixa)</option>
+                            </select>
+                            <select id="videoQualitySelect" class="quality-dropdown" style="display: none;">
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button type="button" class="wizard-back-btn" onclick="prevStep(1)">⬅️ Voltar</button>
+                            <button type="button" class="wizard-next-btn" onclick="nextStep(3)">Próximo ➡️</button>
+                        </div>
                     </div>
 
-                    <div id="videoQualityContainer" class="quality-selection" style="margin-top: 15px; display: none;">
-                        <label style="font-size: 0.9em; margin-bottom: 5px;">Resolução do Vídeo:</label>
-                        <select id="videoQualitySelect" class="quality-dropdown">
-                            <!-- Preenchido pelo JS -->
-                        </select>
+                    <!-- Step 3: Time Cut -->
+                    <div id="step3" class="wizard-step" style="display: none;">
+                        <h4>Passo 3: Recorte de Tempo (Opcional)</h4>
+                        <div id="timeSelection" class="quality-selection" style="margin-top: 15px;">
+                            <p style="font-size: 0.85em; color: #888; margin-bottom: 10px;">Deixe em branco para baixar tudo.</p>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="startTimeInput" class="quality-dropdown" placeholder="Início (ex: 01:20)" style="background-image: none; text-align: center;">
+                                <input type="text" id="endTimeInput" class="quality-dropdown" placeholder="Fim (ex: 02:45)" style="background-image: none; text-align: center;">
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button type="button" class="wizard-back-btn" onclick="prevStep(2)">⬅️ Voltar</button>
+                            <button type="button" class="wizard-next-btn" onclick="nextStep(4)">Próximo ➡️</button>
+                        </div>
                     </div>
 
-                    <div id="timeSelection" class="quality-selection" style="margin-top: 15px;">
-                        <label style="font-size: 0.9em; margin-bottom: 5px;">Recortar Trecho (Opcional):</label>
+                    <!-- Step 4: Flash Mode & Playlist -->
+                    <div id="step4" class="wizard-step" style="display: none;">
+                        <h4>Passo 4: Finalizar</h4>
+                        
+                        <div id="playlistContainer" class="playlist-container" style="display: none; margin-bottom: 15px;">
+                            <div class="playlist-header">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="selectAll" checked>
+                                    <span class="checkmark"></span>
+                                    Selecionar Todos
+                                </label>
+                                <span id="selectedCount">0 selecionados</span>
+                            </div>
+                            <div id="playlistItems" class="playlist-items">
+                            </div>
+                        </div>
+
+                        <div id="flashSelection" class="quality-selection" style="margin-top: 15px; margin-bottom: 25px;">
+                            <label class="checkbox-container" style="color: #fbbf24; font-weight: 600;">
+                                <input type="checkbox" id="flashModeInput">
+                                <span class="checkmark" style="border-color: #fbbf24;"></span>
+                                ⚡ Modo Flash (Usa 100% da rede host - Muito Rápido)
+                            </label>
+                        </div>
+                        
                         <div style="display: flex; gap: 10px;">
-                            <input type="text" id="startTimeInput" class="quality-dropdown" placeholder="Início (ex: 01:20)" style="background-image: none; text-align: center;">
-                            <input type="text" id="endTimeInput" class="quality-dropdown" placeholder="Fim (ex: 02:45)" style="background-image: none; text-align: center;">
+                            <button type="button" class="wizard-back-btn" onclick="prevStep(3)">⬅️ Voltar</button>
+                            <button id="downloadBtn" class="download-action-btn" style="margin-top: 0;">
+                                <span>Iniciar Download</span>
+                                <div class="loader"></div>
+                            </button>
                         </div>
                     </div>
                 </div>
-
-                <div id="playlistContainer" class="playlist-container">
-                    <div class="playlist-header">
-                        <label class="checkbox-container">
-                            <input type="checkbox" id="selectAll" checked>
-                            <span class="checkmark"></span>
-                            Selecionar Todos
-                        </label>
-                        <span id="selectedCount">0 selecionados</span>
-                    </div>
-                    <div id="playlistItems" class="playlist-items"></div>
-                </div>
-
-                <button id="downloadBtn" class="download-action-btn">
-                    <span>Iniciar Download</span>
-                    <div class="loader"></div>
-                </button>
             </div>
 
-            <!-- Status Area -->
             <div id="statusArea" class="status-area">
                 <div id="statusText" class="status-text">Iniciando...</div>
                 <div class="progress-bar-container">
@@ -139,6 +169,9 @@
                 <p class="ffmpeg-warning">⚠️ Requer <a href="https://ffmpeg.org/download.html" target="_blank">FFmpeg</a> para MP3 e vídeos em 4K.</p>
 
                 <div class="credits">
+                    <button id="checkIpBtn" class="github-btn" style="background: rgba(255,255,255,0.05); cursor:pointer; margin-right: 15px; border:none; color:inherit; font:inherit; display:inline-flex; align-items:center; gap:6px;" title="Verificar bloqueios de rede do YouTube">
+                        <span>🛡️</span> Diagnóstico
+                    </button>
                     <a href="https://github.com/8ArthurAlmeida8" target="_blank" class="github-btn">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>

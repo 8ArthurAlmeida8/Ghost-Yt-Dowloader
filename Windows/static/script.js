@@ -1,4 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    let currentStep = 1;
+    let isPlaylistMode = false;
+
+    window.nextStep = function(step) {
+        if (step === 3 && isPlaylistMode) {
+            // Pular step 3 (Recorte de Tempo) se for playlist
+            step = 4;
+        }
+        document.querySelectorAll('.wizard-step').forEach(el => el.style.display = 'none');
+        document.getElementById('step' + step).style.display = 'block';
+        currentStep = step;
+    };
+
+    window.prevStep = function(step) {
+        if (step === 3 && isPlaylistMode) {
+            // Pular step 3 (Recorte de Tempo) voltando para 2 se for playlist
+            step = 2;
+        }
+        document.querySelectorAll('.wizard-step').forEach(el => el.style.display = 'none');
+        document.getElementById('step' + step).style.display = 'block';
+        currentStep = step;
+    };
+
     const urlForm = document.getElementById('urlForm');
     const urlInput = document.getElementById('urlInput');
     const searchBtn = document.getElementById('searchBtn');
@@ -75,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function customPassword() {
+    function customPassword(actionText = 'Digite a senha:') {
         return new Promise((resolve) => {
             const modal = document.getElementById('customPasswordModal');
             const inputEl = document.getElementById('passwordInput');
@@ -83,6 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const cancelBtn = document.getElementById('passwordCancelBtn');
             if (!modal) return resolve(prompt('Digite a senha:'));
             inputEl.value = '';
+            const msgEl = document.getElementById('passwordMessage');
+            if (msgEl) msgEl.textContent = actionText;
             modal.style.display = 'flex';
             inputEl.focus();
             const close = (result) => {
@@ -109,10 +135,33 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isConfirmed) {
                 try {
                     await fetch('/api/shutdown', { method: 'POST' });
-                } catch (e) {
-                    // Erro esperado ao matar o servidor
-                }
+                } catch (e) {}
                 document.body.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100vh; flex-direction:column; color:white;"><h1>Servidor Encerrado</h1><p>Pode fechar esta janela com seguranca.</p></div>';
+            }
+        });
+    }
+
+    const checkIpBtn = document.getElementById('checkIpBtn');
+    if (checkIpBtn) {
+        checkIpBtn.addEventListener('click', async () => {
+            const originalHtml = checkIpBtn.innerHTML;
+            checkIpBtn.innerHTML = '<span>⏳</span> Testando...';
+            checkIpBtn.disabled = true;
+            try {
+                const res = await fetch('/api/check_ip');
+                const data = await res.json();
+                if (data.status === 'ok') {
+                    customConfirm("Diagnóstico de IP", "✅ " + data.message, "OK");
+                } else if (data.status === 'blocked') {
+                    customConfirm("ALERTA DE BLOQUEIO", "❌ " + data.message, "Entendi");
+                } else {
+                    customConfirm("Diagnóstico", "⚠️ " + data.message, "OK");
+                }
+            } catch (e) {
+                customConfirm("Erro", "Falha ao conectar com o servidor para o diagnóstico.", "OK");
+            } finally {
+                checkIpBtn.innerHTML = originalHtml;
+                checkIpBtn.disabled = false;
             }
         });
     }
@@ -244,38 +293,42 @@ document.addEventListener('DOMContentLoaded', () => {
     function showSelectionArea(data) {
         mediaTitle.textContent = data.title;
         selectionArea.classList.add('active');
+        window.nextStep(1);
+        isPlaylistMode = data.is_playlist;
+        
+        if (videoQualitySelect) {
+            videoQualitySelect.innerHTML = '';
+            const resList = data.resolutions || [2160, 1440, 1080, 720, 480, 360, 240, 144];
+            let hasSelected = false;
+            resList.forEach((res, index) => {
+                const option = document.createElement('option');
+                option.value = res;
+                let label = res + 'p';
+                if (res >= 2160) label += ' (4K)';
+                else if (res >= 1440) label += ' (2K)';
+                else if (res >= 1080) label += ' (Full HD)';
+                else if (res >= 720) label += ' (HD)';
+                if (res === 1080 || (!hasSelected && index === 0)) {
+                    option.selected = true;
+                    if (res === 1080) hasSelected = true;
+                }
+                option.textContent = label;
+                videoQualitySelect.appendChild(option);
+            });
+        }
         
         if (data.is_playlist) {
             mediaType.textContent = `Playlist (${data.entries.length} vídeos encontrados)`;
             playlistContainer.style.display = 'block';
-            if (timeSelection) timeSelection.style.display = 'none';
+            timeSelection.style.display = 'none';
             renderPlaylistItems(data.entries);
             updateSelectedCount();
         } else {
             mediaType.textContent = 'Vídeo Único';
             playlistContainer.style.display = 'none';
-            if (timeSelection) { timeSelection.style.display = 'block'; startTimeInput.value = ''; endTimeInput.value = ''; }
-            // Preencher resoluções
-            if (data.resolutions && videoQualitySelect) {
-                videoQualitySelect.innerHTML = '';
-                data.resolutions.forEach(res => {
-                    const label = res >= 2160 ? `${res}p (4K)` : res >= 1080 ? `${res}p (Full HD)` : res >= 720 ? `${res}p (HD)` : `${res}p`;
-                    const opt = document.createElement('option');
-                    opt.value = res;
-                    opt.textContent = label;
-                    if (res === 1080 || (!videoQualitySelect.value && res < 1080)) opt.selected = true;
-                    videoQualitySelect.appendChild(opt);
-                });
-            }
-            // Mostrar qualidade conforme formato
-            const selectedFormat = document.querySelector('input[name="formatOption"]:checked')?.value;
-            if (selectedFormat === 'mp3') {
-                if (qualitySelection) qualitySelection.style.display = 'block';
-                if (videoQualityContainer) videoQualityContainer.style.display = 'none';
-            } else {
-                if (qualitySelection) qualitySelection.style.display = 'none';
-                if (videoQualityContainer) videoQualityContainer.style.display = 'block';
-            }
+            timeSelection.style.display = 'block';
+            startTimeInput.value = '';
+            endTimeInput.value = '';
         }
     }
 
