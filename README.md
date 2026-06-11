@@ -60,7 +60,7 @@
 
 ---
 
-## 🛠️ Como instalar e rodar? (Windows)
+## 🛠️ Como instalar e rodar? (Windows e Linux)
 
 Este projeto foi pensado para ser acessível e de uso pessoal.
 
@@ -79,9 +79,7 @@ Abra o terminal na pasta do projeto e instale as bibliotecas:
 ```cmd
 pip install -r requirements.txt
 ```
-Pronto! Agora é só dar dois cliques em `app.pyw` e a interface abrirá na hora magicamente no seu navegador.
-
-*(Se você usa Linux, confira a versão `GYD (Linux)` no repositório com o script de auto-instalação!)*
+Pronto! Agora é só rodar o `app.pyw` (Windows) ou `app.py` (Linux) e a interface abrirá na hora magicamente no seu navegador.
 
 ---
 
